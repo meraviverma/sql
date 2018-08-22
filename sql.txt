@@ -1,7 +1,8 @@
 Coalesce()
 ----------------------
 It returns the first encountered Not Null Value from  table.
-COALESCE returns the first non-null expr in the expression list. You must specify at least two expressions. If all occurrences of expr evaluate to null, then the function returns null.
+COALESCE returns the first non-null expr in the expression list. You must specify at least two expressions. If all 
+occurrences of expr evaluate to null, then the function returns null.
 
 Example:
 
