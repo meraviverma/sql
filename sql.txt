@@ -21,7 +21,8 @@ PRODUCT_ID LIST_PRICE  MIN_PRICE       Sale
 	  
 ROW_NUMBER() vs RANK()
 ----------------------
-ROW_NUMBER and RANK are similar. ROW_NUMBER numbers all rows sequentially (for example 1, 2, 3, 4, 5). RANK provides the same numeric value for ties (for example 1, 2, 2, 4, 5).
+ROW_NUMBER and RANK are similar. ROW_NUMBER numbers all rows sequentially (for example 1, 2, 3, 4, 5). RANK provides the same 
+numeric value for ties (for example 1, 2, 2, 4, 5).
 RANK when assign same number to a value it escape a value Ex: Suppose it assign 1,1,3,4,5 then you can see it skipped 2.
 
 DENSE_RANK()
@@ -75,7 +76,8 @@ select deptID,max(sal) from emp group by deptID;
 
 Q)Find second highest sal department wise?
 -------------------------------------------
-select a.ename,a.sal,a.deptno from (select ename,sal,deptno,DENSE_RANK() over(partition by deptno order by sal desc)pk from emp)a where pk=2;
+select a.ename,a.sal,a.deptno from (select ename,sal,deptno,DENSE_RANK() over(partition by deptno order by sal desc)pk from emp)a 
+where pk=2;
 
 SELECT max(sal),deptno FROM emp WHERE sal NOT IN(SELECT max(sal)FROM emp GROUP BY deptno)GROUP BY dep;
 
@@ -91,7 +93,8 @@ select * from emp where sal in (select max(sal) from emp) or sal in (select min(
 
 Q)Find all employees who earn more than the average salary in their department.
 -------------------------------------------------------------------------------------
-SELECT last_name, salary, department_id FROM   employees outer WHERE  salary > (SELECT AVG(salary) FROM   employees WHERE  department_id = outer.department_id) 
+SELECT last_name, salary, department_id FROM   employees outer WHERE  salary > (SELECT AVG(salary) FROM   employees WHERE  
+department_id = outer.department_id) 
 
 Q)Display details of those employees who have switched jobs at least twice.
 -------------------------------------------------------------------------------------
