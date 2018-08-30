@@ -1,0 +1,37 @@
+Syntax: 
+SELECT [column,] group_function(column)... 
+FROM table 
+[WHERE condition] 
+[GROUP BY [CUBE | ROLLUP] [group_by_expression] 
+[HAVING having_expression] 
+[ORDER BY column];
+
+Note :
+ Only grouped columns allowed in the group by clause
+ Whenever we are using a group function in the SQL statement, we have to use group by clause.
+
+To display the DEPTNO only one time (output with breaks)
+
+INPUT:
+SQL> BREAK ON DEPTNO SKIP 1
+SQL> SELECT deptno,job,COUNT(*) FROM emp GROUP BY deptno,job;
+
+OUTPUT:
+DEPTNO 		JOB 		COUNT(*)
+---------- --------- 	----------
+10 		CLERK 		1
+		MANAGER 	1
+		PRESIDENT 	1
+20 		CLERK 		2
+		ANALYST 	2
+		MANAGER 	1
+30 		CLERK 		1
+		MANAGER 	1
+		SALESMAN 	4
+
+ANALYSIS:
+Break is Environment command , which breaks the information on repetitive column and displays them only once.
+SKIP 1 used with BREAK to leave one blank line after completion of each
+Deptno.
+
+SQL> CLEAR BREAK;
