@@ -35,3 +35,34 @@ SKIP 1 used with BREAK to leave one blank line after completion of each
 Deptno.
 
 SQL> CLEAR BREAK;
+
+POINTS TO REMEMBER 
+WHERE clause can be used to check for conditions based on values of columns and expressions but not the result of GROUP functions.
+HAVING clause is specially designed to evaluate the conditions that are based on group functions such as SUM, COUNT etc.
+HAVING clause can be used only when GROUP BY clause is used.
+
+ORDER OF EXECUTION
+Here are the rules ORCALE uses to execute different clauses given in SELECT command
+ Selects rows based on Where clause
+ Groups rows based on GROUP BY clause
+ Calculates results for each group
+ Eliminate groups based on HAVING clause
+ Then ORDER BY is used to order the results
+
+Example:
+
+SELECT job,SUM(sal) FROM emp WHERE job != „CLERK‟
+GROUP BY job HAVING SUM(sal) > 5000 ORDER BY job DESC;
+
+SELECT sal FROM emp GROUP BY sal HAVING COUNT(sal) > 1;
+
+SELECT job,COUNT(*) FROM emp GROUP BY job HAVING COUNT(*) BETWEEN 3 AND 5;
+
+SELECT job,SUM(sal) FROM emp GROUP BY job HAVING SUM(sal) > 5000;
+
+SELECT job,SUM(sal) FROM emp WHERE SUM(sal) > 5000 GROUP BY job;
+
+SELECT job,SUM(sal) FROM emp GROUP BY job;
+
+SELECT deptno,job,COUNT(*) FROM emp GROUP BY ROLLUP(deptno,job)
+SELECT deptno,job,COUNT(*) FROM emp GROUP BY CUBE(deptno,job);
