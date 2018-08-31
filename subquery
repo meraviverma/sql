@@ -1,0 +1,11 @@
+Important Points:
+-----------------------------
+Sub query can not use ORDER BY clause. Because ORDER BY clause must be the last clause of SELECT
+BETWEEN … AND operator can not be used with Sub queries
+
+SELECT empno,ename,sal,mgr FROM emp X WHERE EXISTS(SELECT mgr FROM emp WHERE X.mgr = empno);
+INSERT INTO emp1 SELECT * FROM emp ;
+UPDATE emp SET sal = (SELECT MAX(sal) FROM emp) WHERE Empno = (SELECT empno FROM emp WHERE sal = (SELECT MIN (sal) FROM emp));
+SELECT empno,ename,sal FROM emp WHERE sal <ALL(3000,2000,4000);
+SELECT empno,ename,sal FROM emp WHERE sal >ALL(3000,2000,4000);
+SELECT empno,ename,sal FROM emp WHERE sal >ALL(SELECT sal FROM emp);
