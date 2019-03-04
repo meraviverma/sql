@@ -122,5 +122,24 @@ WHERE NOT EXISTS (SELECT 'X'
                          = d.department_id);
 
 
+Q) Display name and manager name which is sorted by joining date.
+------------------------------------------------------------------
+Input:
+ID	NAME	MID	JOINING_DATE
+1	vijay	4	2017-02-01T00:00:00Z
+2	vikash	3	2017-03-02T00:00:00Z
+3	vinod	4	2017-01-03T00:00:00Z
+4	taha	(null)	2017-01-01T00:00:00Z
+
+Expected output:
+
+EMPLOYEENAME	MANAGERNAME
+taha			Manager
+vinod			taha
+vijay			taha
+vikash			vinod
+
+Query:select e.name as employeename,coalesce (m.name,'Manager') as managername
+from emp e left outer join emp m on e.mid=m.id order by e.joining_date;
 
 
