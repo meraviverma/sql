@@ -1,3 +1,4 @@
+In sql fiddle select oracle 11gR2
 all_sales
 -----------------------
 CREATE TABLE all_sales (
