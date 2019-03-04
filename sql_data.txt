@@ -62,3 +62,30 @@ INSERT INTO EMP VALUES(7876, 'ADAMS', 'CLERK', 7788,TO_DATE('12-JAN-1983', 'DD-M
 INSERT INTO EMP VALUES(7900, 'JAMES', 'CLERK', 7698,TO_DATE('3-DEC-1981', 'DD-MON-YYYY'), 950, NULL, 30);
 INSERT INTO EMP VALUES(7902, 'FORD', 'ANALYST', 7566,TO_DATE('3-DEC-1981', 'DD-MON-YYYY'), 3000, NULL, 20);
 INSERT INTO EMP VALUES(7934, 'MILLER', 'CLERK', 7782,TO_DATE('23-JAN-1982', 'DD-MON-YYYY'), 1300, NULL, 10);
+
+
+CREATE TABLE EMP(
+id NUMBER(4) ,
+name VARCHAR2(10),
+mid NUMBER(4) ,
+joining_date DATE
+);
+INSERT INTO EMP VALUES(1,'vijay',4,TO_DATE('01-FEB-2017', 'DD-MON-YYYY'));
+INSERT INTO EMP VALUES(1,'vikash',3,TO_DATE('02-MAR-2017', 'DD-MON-YYYY'));
+INSERT INTO EMP VALUES(1,'vinod',4,TO_DATE('03-JAN-2017', 'DD-MON-YYYY'));
+INSERT INTO EMP VALUES(1,'taha',null,TO_DATE('01-JAN-2017', 'DD-MON-YYYY'));
+
+ID	NAME	MID	JOINING_DATE
+1	vijay	4	2017-02-01T00:00:00Z
+2	vikash	3	2017-03-02T00:00:00Z
+3	vinod	4	2017-01-03T00:00:00Z
+4	taha	(null)	2017-01-01T00:00:00Z
+
+EMPLOYEENAME	MANAGERNAME
+taha			Manager
+vinod			taha
+vijay			taha
+vikash			vinod
+
+select e.name as employeename,coalesce (m.name,'Manager') as managername
+from emp e left outer join emp m on e.mid=m.id order by e.joining_date;
