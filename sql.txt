@@ -143,3 +143,108 @@ Query:select e.name as employeename,coalesce (m.name,'Manager') as managername
 from emp e left outer join emp m on e.mid=m.id order by e.joining_date;
 
 
+Q)Hive Date Function 
+-------------------------------------------------------------
+current_timestamp();
+current_date();
+date_add(current_date(), 1);
+date_sub(current_date(),1);
+trunc(current_timestamp(), 'MONTH');
+
+hive> select current_timestamp();
+OK
+2017-10-01 00:54:14.736
+Time taken: 0.65 seconds, Fetched: 1 row(s)
+
+hive> select current_date();
+OK
+2017-10-01
+Time taken: 0.161 seconds, Fetched: 1 row(s)
+
+1) Add 1 day to current date using HiveQL
+
+hive> select date_add(current_date(), 1);
+OK
+2017-10-02
+Time taken: 0.123 seconds, Fetched: 1 row(s)
+
+2)Subtract 1 day from current date using HiveQL
+
+hive> select date_sub(current_date(),1);
+OK
+2017-09-30
+Time taken: 0.107 seconds, Fetched: 1 row(s)
+
+3)Get first day of the given timstamp using HiveQL
+
+hive> select trunc(current_timestamp(), 'MONTH');
+OK
+2017-10-01
+Time taken: 0.072 seconds, Fetched: 1 row(s)
+
+4)Convert timestamp to date format using HiveQL
+
+hive> select to_date(current_timestamp());
+OK
+2017-10-01
+Time taken: 0.08 seconds, Fetched: 1 row(s)
+
+5)Data type conversion using Cast function in HiveQL
+
+hive> select cast(current_timestamp() as date);
+OK
+2017-10-01
+Time taken: 0.094 seconds, Fetched: 1 row(s)
+--------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
+Teradata Date Functions Examples
+Teradata get current date and timestamp examples
+
+select current_date;
+Date
+2017-10-25
+select current_timestamp;
+Current TimeStamp(6)
+2017-10-25 12:20:03.94
+Example to add one month to current date in Teradata
+
+select ADD_MONTHS(current_date,1);
+ADD_MONTHS(Date, 1)
+2017-11-25
+select current_date + INTERVAL '1' MONTH;
+(Date+ 1)
+2017-11-25
+Teradata Add one hour to current timestamp
+
+select current_timestamp + INTERVAL '1' hour;
+(Current TimeStamp(6)+ 1)
+2017-10-25 13:28:20.75
+Teradata subtract one month from current date
+
+select ADD_MONTHS(current_date,-1);
+ADD_MONTHS(Date, -1)
+2017-09-25
+select current_date - INTERVAL '1' MONTH;
+(Date- 1)
+2017-09-25
+Example to Extract day, month, year from current date in Teradata
+
+select EXTRACT(DAY FROM current_date);
+EXTRACT(DAY FROM Date)
+25
+select EXTRACT(MONTH FROM current_date);
+EXTRACT(MONTH FROM Date)
+10
+select EXTRACT(YEAR FROM current_date);
+EXTRACT(YEAR FROM Date)
+2017
+Teradata get months between two date values
+
+SELECT MONTHS_BETWEEN(DATE'2017-03-01', DATE'2017-01-01');
+MONTHS_BETWEEN(2017-03-01,2017-01-01)
+2
+Teradata round up date to first day of the week
+
+SELECT TRUNC(CAST('2017/01/05' AS DATE), 'D');
+TRUNC('2017/01/05','D')
+2017-01-01
