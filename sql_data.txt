@@ -90,3 +90,39 @@ vikash			vinod
 
 select e.name as employeename,coalesce (m.name,'Manager') as managername
 from emp e left outer join emp m on e.mid=m.id order by e.joining_date;
+
+---------------------------------------------------------------------------------------------
+CREATE TABLE emp1 (
+id NUMBER(4) ,
+name VARCHAR2(9)
+ );
+ CREATE TABLE emp2 (
+id NUMBER(4) ,
+name VARCHAR2(9)
+ );
+ insert into emp1 values(1,'b');
+insert into emp1 values(6,'e');
+
+insert into emp2 values(1,'a');
+insert into emp2 values(2,'b');
+insert into emp2 values(3,'c');
+insert into emp2 values(4,'d');
+  
+select * from emp1;
+select * from emp2;
+
+select * from emp1 union select * from emp2;
+
+select * from emp2 where id not in (select id from emp1);
+
+select * from emp1 union select * from emp2 where id not in (select id from emp1)
+ 
+ID	NAME
+1	b
+6	e
+
+ID		NAME
+1		a
+2		b
+3		c
+4		d 
