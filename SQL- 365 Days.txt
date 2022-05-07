@@ -1,3 +1,17 @@
+SQL Bolt: http://sqlbolt.com/
+· SQL Course: sqlcourse.com/
+· SQL ZOO: sqlzoo.net/
+· SoloLearn: https://lnkd.in/eAX5TiGM
+· Mode SQL Tutorial: https://lnkd.in/eW_Pk4Fg
+· W3 Schools: https://lnkd.in/ej8JkQSE
+· Code Academy: https://lnkd.in/eVWqNKRP
+
+YouTube Resources:
+· Freecodecamp: https://lnkd.in/eAbjRYG9
+· SQL Server tutorial for beginners: https://lnkd.in/eYjMJTtj
+· Learn SQL In 60 Minutes: https://lnkd.in/e_kmsqrV
+
+
 1.CASE WHEN. So many great use cases!
 2. Self joins. Common in product user behavior.
 3. DISTINCT and GROUP BY
