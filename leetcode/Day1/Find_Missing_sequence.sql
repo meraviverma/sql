@@ -20,7 +20,7 @@ SELECT * FROM Emp_CTE
 
 
 
-PART1: 
+------------- PART1: 
 
 CREATE TABLE tblEmployee(EmpID INT PRIMARY KEY     NOT NULL);
 
@@ -50,6 +50,7 @@ WHERE E.EmpID IS NULL
 
 
 PART2:
+-----------------------------------
 
 CREATE TABLE tblEmployee1 (EmpID INT);
 INSERT into tblEmployee1 values (51000),(51001),(51004),(51009),(51013),(51017),(51020),(51025),(51026);
@@ -100,4 +101,30 @@ Missing_Sequence
 51022
 51023
 51024
+
+---------------------------------------
+PART2:
+---------------------------------------
+Using SQL Server:
+
+CREATE TABLE tblEmployee1 (EmpID INT)
+
+INSERT tblEmployee1 values (51000),(51001),(51004),(51009),(51013),(51017),(51020),(51025),(51026)
+
+SELECT * FROM tblEmployee1
+
+DECLARE @StartID INT, @EndID INT;
+SELECT @StartID = MIN(EmpID) FROM tblEmployee1
+SELECT @EndID = MAX(EmpID) FROM tblEmployee1
+
+;WITH Emp_CTE(ID) AS 
+ (
+ SELECT @StartID 
+ UNION ALL
+ SELECT ID + 1 FROM Emp_CTE WHERE ID < @EndID
+ )
+SELECT EC.ID AS Missing_Sequence FROM Emp_CTE EC 
+LEFT JOIN tblEmployee1 E
+ON EC.ID = E.EmpID 
+WHERE E.EmpID IS NULL
 
