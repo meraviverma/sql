@@ -3,6 +3,7 @@ Find out top 20 % products which gives 80% of the sales. This is also known as p
 80% of productivity comes form the 20% of causes.
 80% of sales comes from the 20% of the products
 --------------------------------------------------
+https://www.youtube.com/watch?v=oGgE180oaTs
 
 
 select sum(sales) * 0.8 from orders;

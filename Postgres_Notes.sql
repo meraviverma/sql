@@ -1,5 +1,7 @@
 datediff(day,create_date,resolved_date) 
+
 datepart(week,create_date)
+
 DATEPART(weekday, holiday_date)
 
 Postgres doesn’t support the DATEDIFF function. Alternatively, the “-” operator, DATE_PART(), EXTRACT(), and AGE() functions can be used in PostgreSQL to calculate the difference between various DateTime values. 
