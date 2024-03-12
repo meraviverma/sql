@@ -1,4 +1,7 @@
-🤔Problem statement
+🤔Problem statement]----
+
+---------------------------------
+https://leetcode.com/problems/restaurant-growth/description/?envType=study-plan-v2&envId=top-sql-50
 
 You are the restaurant owner and you want to analyze a possible expansion (there will be at least one customer every day).
 
