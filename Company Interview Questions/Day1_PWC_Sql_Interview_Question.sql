@@ -119,3 +119,20 @@ Note:
 𝐂𝐎𝐀𝐋𝐄𝐒𝐂𝐄(): It returns the first non-NULL value from a list of expressions and works in SQL Server, MySQL, PostgreSQL, Oracle, and more.
 
 
+################################################################################
+
+select s.id, 'Only In Source' as comment from src s
+left join tgt t on s.id=t.id
+where t.id is null
+UNION
+select s.id,'Mismatch' as comment from src s
+join tgt t on s.id=t.id
+where s.name <> t.name
+UNION
+select t.id , 'Only In Target' as comment from src s
+right join tgt t on s.id=t.id
+where s.id is null;
+
+
+
+
