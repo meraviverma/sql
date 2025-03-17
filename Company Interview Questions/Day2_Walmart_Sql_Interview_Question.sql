@@ -83,3 +83,19 @@ where friends_salary > student_salary
 "Albert"
 "David"
 "John"
+
+
+### Another SOlution ##########
+--------------------------------------
+select s.student_name
+from
+students_tbl s join friends_tbl f on s.id=f.id
+join Package_Tbl p on p.id=s.id
+join Package_Tbl p1 on p1.id=F.friend_id
+where p1.salary > p.salary;
+
+
+"student_name"
+"David"
+"John"
+"Albert"
