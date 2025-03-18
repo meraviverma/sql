@@ -64,3 +64,83 @@ percentage_within_recommended_period
 𝐁. Sums the 'Y' values, divides by total count, multiplies by 100, and rounds the result to the nearest integer.
 
 
+Solution:
+----------------
+
+Approach:
+---------
+select dose_id,beneficiary_id,vaccination_date as first_dose,
+lead(vaccination_date) over(partition by beneficiary_id order by beneficiary_id)
+as second_dose,
+lead(vaccination_date) over(partition by beneficiary_id order by beneficiary_id) - vaccination_date as datediff
+from doses
+
+"dose_id"	"beneficiary_id"	"first_dose"	"second_dose"	"datediff"
+2193	750	"2021-05-15"	"2021-07-05"	51
+2194	750	"2021-07-05"		
+2195	751	"2021-06-01"	"2021-07-31"	60
+2196	751	"2021-07-31"		
+2197	752	"2021-06-10"	"2021-07-30"	50
+2198	752	"2021-07-30"		
+2199	753	"2021-06-15"	"2021-09-01"	78
+2200	753	"2021-09-01"		
+2201	754	"2021-04-18"	"2021-06-10"	53
+2202	754	"2021-06-10"		
+2203	755	"2021-05-25"	"2021-08-15"	82
+2204	755	"2021-08-15"		
+
+
+with Next_Vaccination as(
+select dose_id,beneficiary_id,vaccination_date as first_dose,
+lead(vaccination_date) over(partition by beneficiary_id order by beneficiary_id)
+as second_dose,
+lead(vaccination_date) over(partition by beneficiary_id order by beneficiary_id) - vaccination_date as datediff
+from doses),
+
+check_for_given_days_bracket AS(
+select dose_id,beneficiary_id,first_dose,second_dose,
+	case when datediff >= 42 and datediff <= 72 then 'Y' else 'N' end as dose_within_recommended_days
+	from Next_Vaccination where datediff is not null
+)
+
+select * from check_for_given_days_bracket
+
+"dose_id"	"beneficiary_id"	"first_dose"	"second_dose"	"dose_within_recommended_days"
+2193		750					"2021-05-15"	"2021-07-05"	"Y"
+2195		751					"2021-06-01"	"2021-07-31"	"Y"
+2197		752					"2021-06-10"	"2021-07-30"	"Y"
+2199		753					"2021-06-15"	"2021-09-01"	"N"
+2201		754					"2021-04-18"	"2021-06-10"	"Y"
+2203		755					"2021-05-25"	"2021-08-15"	"N"
+
+
+
+
+Solution:
+----------------
+select * from Doses;
+
+with Next_Vaccination as(
+select dose_id,beneficiary_id,vaccination_date as first_dose,
+lead(vaccination_date) over(partition by beneficiary_id order by beneficiary_id)
+as second_dose,
+lead(vaccination_date) over(partition by beneficiary_id order by beneficiary_id) - vaccination_date as datediff
+from doses),
+
+check_for_given_days_bracket AS(
+select dose_id,beneficiary_id,first_dose,second_dose,
+	case when datediff >= 42 and datediff <= 72 then 'Y' else 'N' end as dose_within_recommended_days
+	from Next_Vaccination where datediff is not null
+)
+
+SELECT
+ROUND(SUM(CASE WHEN dose_within_recommended_days = 'Y' THEN 1  END) / 
+    COUNT(*)::numeric*100, 
+    0
+) AS percentage
+FROM check_for_given_days_bracket;
+;
+
+
+"percentage"
+67
