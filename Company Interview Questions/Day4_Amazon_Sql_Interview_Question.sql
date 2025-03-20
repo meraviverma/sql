@@ -52,3 +52,29 @@ INSERT INTO orders (order_id, customer_id, order_date, order_amount) VALUES
 6			102				"2024-03-10"	320.00
 7			103				"2024-01-25"	400.00
 8			103				"2024-02-15"	420.00
+
+
+Solution:
+--------------
+with cte as(
+select order_id,customer_id,order_date,order_amount,
+	case when dense_rank() over(partition by customer_id order by order_date desc) =1 then 1 else 0 end as latest_order,
+	case when dense_rank() over(partition by customer_id order by order_date desc) =2 then 2 else 0 end as second_latest_order
+from orders),
+
+latest_order as (select customer_id,
+case when latest_order = 1 then order_amount end as lastest_order_amount
+from cte where latest_order=1),
+
+ second_latest_order as (select customer_id,
+case when second_latest_order = 2 then order_amount end as second_latest_order_amount
+from cte where second_latest_order=2)
+
+select c1.customer_id,c1.lastest_order_amount,c2.second_latest_order_amount
+from latest_order c1 join second_latest_order c2 ON c1.customer_id = c2.customer_id
+
+
+"customer_id"	"lastest_order_amount"	"second_latest_order_amount"
+101				180.00					200.00
+102				320.00					250.00
+103				420.00					400.00
