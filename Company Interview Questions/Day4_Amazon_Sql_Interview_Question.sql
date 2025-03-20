@@ -78,3 +78,32 @@ from latest_order c1 join second_latest_order c2 ON c1.customer_id = c2.customer
 101				180.00					200.00
 102				320.00					250.00
 103				420.00					400.00
+
+
+
+-------------------------------------------------------------------------------
+SOlution 2:
+------------
+WITH ct AS 
+(
+ SELECT *,
+ ROW_NUMBER() OVER (PARTITION BY ord.customer_id ORDER BY ord.order_date DESC) AS Rn
+ FROM orders ord
+),
+ct2 AS 
+(
+ SELECT *,MAX(CASE WHEN Rn=2 THEN order_amount ELSE NULL END) OVER (PARTITION BY customer_id) AS second_latest_order_amount
+ FROM ct
+)
+SELECT customer_id,order_amount AS latest_order_amount,second_latest_order_amount
+FROM ct2
+WHERE 1=1
+AND Rn=1
+
+
+"customer_id"	"lastest_order_amount"	"second_latest_order_amount"
+101				180.00					200.00
+102				320.00					250.00
+103				420.00					400.00
+
+
