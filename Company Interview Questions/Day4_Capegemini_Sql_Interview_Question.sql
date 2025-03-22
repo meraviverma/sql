@@ -68,3 +68,41 @@ Keep only passengers whose cumulative weight does not exceed the lift's capacity
 
 𝐬𝐭𝐫𝐢𝐧𝐠_𝐚𝐠𝐠(): It is a SQL Server aggregate function that concatenates values from multiple rows into a single string, separated by a specified delimiter.
 
+SOLUTION:
+--------------
+select l.id,
+lp.passenger_name,l.capacity_kg,
+sum(lp.weight_kg) over(partition by lp.lift_id order by lp.weight_kg) as running_total
+from lift l join lift_passengers lp on l.id=lp.lift_id
+
+"id"	"passenger_name"	"capacity_kg"	"running_total"
+1		"Adarsh"			300				73
+1		"Dheeraj"			300				153
+1		"Rahul"				300				238
+1		"Riti"				300				333
+2		"Priti"				350				73
+2		"Neha"				350				150
+2		"Vimal"				350				233
+2		"Himanshi"			350				318
+
+
+
+with liftjoin as (
+select l.id,
+lp.passenger_name,l.capacity_kg,
+sum(lp.weight_kg) over(partition by lp.lift_id order by lp.weight_kg) as running_total
+from lift l join lift_passengers lp on l.id=lp.lift_id),
+
+capacity_wise_passeger as(
+select * from liftjoin where running_total < capacity_kg
+)
+
+select id as lift_id,
+string_agg(passenger_name,',') as passengers
+from capacity_wise_passeger
+group by id;
+
+
+"lift_id"	"passengers"
+1			"Adarsh,Dheeraj,Rahul"
+2			"Priti,Neha,Vimal,Himanshi"
