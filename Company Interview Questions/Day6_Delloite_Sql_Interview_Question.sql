@@ -88,5 +88,30 @@ Display cities in descending order of population density.
 
 
 
+-----------------------------------
+SOLUTION
+--------------------------------------
+select * from cities_population;
+
+with population_city_wise as(
+select city,country,ROUND((population/area),0) as population_density
+from cities_population where area!=0
+	),
+rank_cities as(
+select city,population_density,country,
+	dense_rank() over(order by population_density desc ) as city_with_highest_density,
+	dense_rank() over (order by population_density) as city_with_lowest_density
+	from 
+	population_city_wise
+)
+select city,population_density from rank_cities
+where city_with_highest_density = 1 or
+city_with_lowest_density = 1
+order by
+population_density desc;
 
 
+"city"		"population_density"
+"Gotham"	5000
+"Rivertown"	20
+"Lakecity"	20
