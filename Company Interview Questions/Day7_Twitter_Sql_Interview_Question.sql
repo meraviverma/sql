@@ -2,7 +2,7 @@
 
 CREATE TABLE Tweets (
  user_id INT,
- tweet_date DATETIME,
+ tweet_date DATE,
  tweet_count INT
 );
 
