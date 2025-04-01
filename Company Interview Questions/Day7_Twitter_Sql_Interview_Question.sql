@@ -36,3 +36,48 @@ INSERT INTO Tweets (user_id, tweet_date, tweet_count) VALUES
 𝐂. 𝐑𝐎𝐖𝐒 𝐁𝐄𝐓𝐖𝐄𝐄𝐍 𝟐 𝐏𝐑𝐄𝐂𝐄𝐃𝐈𝐍𝐆 𝐀𝐍𝐃 𝐂𝐔𝐑𝐑𝐄𝐍𝐓 𝐑𝐎𝐖 applying for three-day rolling average, i.e. Current row and two days before the current row
 𝐃. Round average to two decimal places
 
+
+select * from tweets;
+
+select user_id,
+cast(tweet_date as date) as tweet_date,
+round((
+avg(cast(tweet_count as float))
+over(partition by user_id
+order by tweet_date
+rows between 2 preceding and current row))::Decimal,2
+) as three_days_rolling_avg
+from tweets;
+
+user_id tweet_date	three_days_rolling_avg
+101	"2022-01-01"	5.00
+101	"2022-01-02"	6.00
+101	"2022-01-03"	6.00
+101	"2022-01-04"	7.00
+101	"2022-01-05"	8.33
+101	"2022-01-06"	8.67
+101	"2022-01-07"	9.00
+102	"2022-01-01"	10.00
+102	"2022-01-02"	11.00
+102	"2022-01-03"	11.67
+102	"2022-01-04"	11.33
+102	"2022-01-05"	10.67
+102	"2022-01-06"	11.67
+102	"2022-01-07"	12.67
+103	"2022-01-01"	15.00
+103	"2022-01-02"	16.50
+103	"2022-01-03"	16.33
+103	"2022-01-04"	18.00
+103	"2022-01-05"	16.00
+103	"2022-01-06"	15.33
+103	"2022-01-07"	12.00
+111	"2022-01-31"	4.00
+111	"2022-02-03"	4.50
+222	"2022-01-31"	8.00
+333	"2022-01-31"	12.00
+444	"2022-02-01"	3.00
+555	"2022-02-01"	7.00
+666	"2022-02-01"	11.00
+777	"2022-02-02"	6.00
+888	"2022-02-02"	9.00
+999	"2022-02-02"	13.00
