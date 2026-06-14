@@ -34,6 +34,14 @@ INSERT INTO cities_population (city, country, population, area) VALUES
 ('Pinegrove', 'Forestland', 120000, 700),
 ('Meadowville', 'Plainsland', 90000, 600);
 
+Final Output:
+-----------------
+"city"		"population_density"
+"Gotham"	5000
+"Rivertown"	20
+"Lakecity"	20
+
+
 𝐀𝐩𝐩𝐫𝐨𝐚𝐜𝐡:
 
 𝐂𝐚𝐥𝐜𝐮𝐥𝐚𝐭𝐞 𝐏𝐨𝐩𝐮𝐥𝐚𝐭𝐢𝐨𝐧 𝐃𝐞𝐧𝐬𝐢𝐭𝐲:
