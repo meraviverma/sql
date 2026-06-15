@@ -1,3 +1,5 @@
+-- DIFFERENCE BETWEEN ROWS AND RANGE IN WINDOW FUNCTIONS
+
 scripts:
 create table stock_trades(
 trade_id int,

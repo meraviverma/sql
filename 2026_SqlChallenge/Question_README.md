@@ -22,3 +22,6 @@
 
 ### Day 4
 - Concept Time: Rows Between Range Between
+
+### Day 5 
+- Concept TIme: FIRST_VALUE, LAST_VALUE,NTH_VALUE, NTILE, CUME_DIST,PERCENT_RANK
