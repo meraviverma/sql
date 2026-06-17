@@ -378,3 +378,285 @@ WHERE x.product_name='Galaxy Z Fold 3';
 
 
 
+# 📘 Recursive Queries in SQL (`WITH RECURSIVE`)
+
+## 🔹 What is `WITH RECURSIVE`?
+- `WITH RECURSIVE` allows you to define **Common Table Expressions (CTEs)** that reference themselves.
+- Useful for problems involving **hierarchies, graphs, or sequences**.
+- Typical use cases:
+  - Organizational charts (employees → managers).
+  - Tree structures (categories → subcategories).
+  - Graph traversal (paths, connectivity).
+  - Generating sequences (numbers, dates).
+
+---
+
+## 🔹 Structure of a Recursive CTE
+A recursive CTE has **two parts**:
+1. **Anchor Member** → Base query (non-recursive).
+2. **Recursive Member** → Refers back to the CTE itself.
+
+```sql
+WITH RECURSIVE cte_name AS (
+    -- Anchor member
+    SELECT initial_values
+    UNION ALL
+    -- Recursive member
+    SELECT next_values
+    FROM cte_name
+    JOIN other_tables
+    WHERE termination_condition
+)
+SELECT * FROM cte_name;
+---
+## 🔹 Example 1: Generate Numbers 1 to 10
+```sql
+WITH RECURSIVE numbers AS (
+    SELECT 1 AS n              -- Anchor
+    UNION ALL
+    SELECT n + 1               -- Recursive
+    FROM numbers
+    WHERE n < 10               -- Termination
+)
+SELECT * FROM numbers;
+```
+✅ Output: 1, 2, 3, …, 10
+
+---
+
+## 🔹 Example 2: Employee Hierarchy
+```sql
+WITH RECURSIVE emp_cte AS (
+    -- Anchor: start with the manager
+    SELECT emp_id, emp_name, manager_id, 1 AS level
+    FROM employees
+    WHERE manager_id IS NULL
+
+    UNION ALL
+
+    -- Recursive: find subordinates
+    SELECT e.emp_id, e.emp_name, e.manager_id, c.level + 1
+    FROM employees e
+    INNER JOIN emp_cte c ON e.manager_id = c.emp_id
+)
+SELECT * FROM emp_cte ORDER BY level;
+```
+✅ Output: Hierarchical list of employees with levels.
+
+---
+
+## 🔹 Example 3: Factorial Calculation
+```sql
+WITH RECURSIVE factorial(n, fact) AS (
+    SELECT 1, 1                -- Anchor: 1! = 1
+    UNION ALL
+    SELECT n + 1, fact * (n + 1)
+    FROM factorial
+    WHERE n < 5
+)
+SELECT * FROM factorial;
+```
+✅ Output: factorial values from 1! to 5!
+
+---
+
+## 🔹 Key Notes
+- Always include a **termination condition** (`WHERE n < ...`) to avoid infinite loops.
+- `UNION ALL` is typically used (instead of `UNION`) for performance.
+- Recursive CTEs are supported in **PostgreSQL, SQL Server, Oracle (with CONNECT BY), and MySQL 8+**.
+
+---
+
+## 🔹 Practical Applications
+- 📂 File system traversal (folders → subfolders).
+- 🏢 Corporate hierarchy.
+- 📊 Graph algorithms (shortest path, connectivity).
+- 📅 Date range generation.
+
+## Example
+
+```sql
+WITH RECURSIVE range_cte AS (
+    SELECT MIN(num) AS min_num, MAX(num) AS max_num
+    FROM numbers
+),
+num_cte AS (
+    -- anchor: start at min_num
+    SELECT min_num AS num, max_num
+    FROM range_cte
+    UNION ALL
+    -- recursive step: keep adding +1 until max_num
+    SELECT num + 1, max_num
+    FROM num_cte
+    WHERE num < max_num
+)
+SELECT num
+FROM num_cte
+WHERE num NOT IN (SELECT num FROM numbers)
+ORDER BY num;
+```
+
+## 🧩 Query Breakdown
+
+### 1. `range_cte`
+```sql
+WITH RECURSIVE range_cte AS (
+    SELECT MIN(num) AS min_num, MAX(num) AS max_num
+    FROM numbers
+)
+```
+- This is **not recursive**.  
+- It simply finds the **minimum and maximum values** from the `numbers` table.  
+- Example: If `numbers` contains `2, 5, 7`, then `min_num = 2`, `max_num = 7`.
+
+---
+
+### 2. `num_cte`
+```sql
+num_cte AS (
+    -- anchor: start at min_num
+    SELECT min_num AS num, max_num
+    FROM range_cte
+
+    UNION ALL
+
+    -- recursive step: keep adding +1 until max_num
+    SELECT num + 1, max_num
+    FROM num_cte
+    WHERE num < max_num
+)
+```
+
+- **Anchor member:** Starts at the minimum number (`min_num`).  
+- **Recursive member:** Adds `+1` each time until it reaches `max_num`.  
+- The **termination condition is inside the recursive step**:
+  ```sql
+  WHERE num < max_num
+  ```
+  This ensures recursion stops once `num = max_num`.
+
+So even though you didn’t write a separate termination clause outside, the recursion is naturally bounded by `num < max_num`.
+
+---
+
+### 3. Final Selection
+```sql
+SELECT num
+FROM num_cte
+WHERE num NOT IN (SELECT num FROM numbers)
+ORDER BY num;
+```
+
+- This generates the **full range** from `min_num` to `max_num`.  
+- Then it filters out numbers that already exist in the `numbers` table.  
+- Result: You get the **missing numbers** in the sequence.
+
+---
+
+## 🔹 Example Walkthrough
+
+Suppose `numbers` table has:
+```
+2
+4
+6
+```
+
+- `range_cte` → `min_num = 2`, `max_num = 6`
+- `num_cte` generates: `2, 3, 4, 5, 6`
+- Final filter removes existing (`2, 4, 6`) → Output: `3, 5`
+
+---
+
+## ✅ Key Insight
+- The **termination condition is implicit** in the recursive member (`WHERE num < max_num`).  
+- Without it, recursion would be infinite.  
+- That’s why your query is safe: it **stops at the maximum number**.
+
+
+
+# 🔢 Using `generate_series` and  `EXCEPT` in SQL
+
+## 🔹 What is `generate_series`?
+- `generate_series(start, stop [, step])` is a PostgreSQL function that generates a set of values.
+- Commonly used to create ranges of numbers or dates.
+- Example:
+  ```sql
+  SELECT generate_series(1, 5);
+
+  ```
+  ✅ Output: 1, 2, 3, 4, 5
+
+---
+
+## 🔹 What is `EXCEPT`?
+- `EXCEPT` returns rows from the **first query** that are **not present in the second query**.
+- It’s essentially a **set difference** operator.
+- Example:
+  ```sql
+  SELECT 1
+  EXCEPT
+  SELECT 1;
+  ```
+  ✅ Output: (no rows, because 1 exists in both)
+
+---
+
+## 🔹 Finding Missing Numbers
+Suppose you have a table:
+
+```sql
+CREATE TABLE numbers (num INT);
+INSERT INTO numbers VALUES (1), (2), (4), (6);
+```
+
+You want to find missing numbers between the **minimum and maximum**.
+
+### Query:
+```sql
+WITH range AS (
+    SELECT MIN(num) AS min_num, MAX(num) AS max_num
+    FROM numbers
+)
+SELECT generate_series(min_num, max_num) AS num
+FROM range
+EXCEPT
+SELECT num FROM numbers
+ORDER BY num;
+```
+
+### Step-by-step:
+1. `range` → finds min and max (here: 1 and 6).
+2. `generate_series(min_num, max_num)` → generates 1, 2, 3, 4, 5, 6.
+3. `EXCEPT` removes numbers that already exist in the table.
+4. Final result → missing numbers.
+
+---
+
+## 🔹 Example Output
+For table values `1, 2, 4, 6`:
+
+- Generated series: `1, 2, 3, 4, 5, 6`
+- Existing numbers: `1, 2, 4, 6`
+- Missing numbers: `3, 5`
+
+✅ Output:
+```
+3
+5
+```
+
+---
+
+## 🔹 Key Notes
+- `generate_series` is **compact and efficient** compared to recursive CTEs.
+- `EXCEPT` is a clean way to subtract existing values.
+- Works well for **continuous ranges** (numbers, dates).
+- For very large ranges, performance may depend on indexing and query optimization.
+
+---
+
+## 🔹 Practical Applications
+- Detect missing IDs in sequences.
+- Find missing dates in a timeline.
+- Validate data completeness in ETL pipelines.
